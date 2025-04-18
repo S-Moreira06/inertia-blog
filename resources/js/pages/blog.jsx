@@ -1,8 +1,10 @@
 import { usePage, Link, router} from '@inertiajs/react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { usePageTransition } from '../hooks/useTransition';
 
 export default function Blog() {
     const { posts, categories, currentCategory } = usePage().props;
+    const loading = usePageTransition();
 
     const handleCategoryChange = (categoryId) => {
         router.visit(`/blog${categoryId ? `?category=${categoryId}` : ''}`, {
@@ -13,7 +15,7 @@ export default function Blog() {
 
     return (
         <div className="max-w-4xl mx-auto py-10">
-            <h1 className="text-3xl font-bold mb-6">Tous les articles</h1>
+            <h1 className="text-4xl font-bold mb-6">Tous les articles</h1>
 {/* Onglets pour les catégories */}
             <div className="mb-6 flex space-x-4">
                 <button // Onglet "Toutes les catégories"
@@ -33,7 +35,18 @@ export default function Blog() {
                     </button>
                 ))}
             </div>
-{/* Affichage des posts */}
+{/* Affichage des posts + loader(spinner)*/}
+            {loading ? (
+                <div className="flex justify-center items-center h-64">
+                    <motion.div
+                        className="w-12 h-12 border-4 border-blue-300 border-t-transparent rounded-full animate-spin"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        exit={{ scale: 0 }}
+                        transition={{ duration: 0.3 }}
+                    />
+                </div>
+            ) : (
             <AnimatePresence mode="wait">
                 <motion.div
                     key={currentCategory || 'all'}
@@ -51,7 +64,7 @@ export default function Blog() {
                                 exit={{ opacity: 0, y: -10 }}
                                 transition={{
                                     duration: 0.4,
-                                    delay: index * 0.05, // ➜ décalage progressif
+                                    delay: index * 0.1, // ➜ décalage progressif
                                 }}
                                 className="mb-8 p-4 border rounded shadow"
                             >
@@ -77,6 +90,7 @@ export default function Blog() {
                     )}
                 </motion.div>
             </AnimatePresence>
+            )}
         </div>
     );
 }
