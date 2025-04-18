@@ -4,13 +4,29 @@ namespace App\Http\Controllers;
 
 use Inertia\Inertia;
 use App\Models\Post;
+use App\Models\Category;
+use Illuminate\Http\Request;
 
 class BlogController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $categoryId = $request->query('category');
+        $categories = Category::all();
+
+        $postsQuery = Post::with('category')->latest();
+
+        // Si une catégorie est sélectionnée, filtre les posts
+        if ($categoryId) {
+            $postsQuery->where('category_id', $categoryId);
+        }
+
+        $posts = $postsQuery->get();
+
         return Inertia::render('blog', [
-            'posts' => Post::with('category')->latest()->get(),
+            'posts' => $posts,
+            'categories' => $categories,
+            'currentCategory' => $categoryId,
         ]);
     }
     public function show($slug)
