@@ -27,24 +27,34 @@ export default function Blog() {
                     <button
                         key={category.id}
                         onClick={() => handleCategoryChange(category.id)}
-                        className={`px-4 py-2 rounded ${currentCategory === category.id ? 'bg-blue-300 text-white' : 'bg-gray-200 text-gray-800'} hover:bg-blue-200`}
+                        className={`px-4 py-2 rounded ${String(currentCategory) === String(category.id) ? 'bg-blue-300 text-white' : 'bg-gray-200 text-gray-800'} hover:bg-blue-200`}
                     >
                         {category.name}
                     </button>
                 ))}
             </div>
 {/* Affichage des posts */}
-<AnimatePresence mode="wait">
-                {posts.length > 0 ? (
-                    <motion.div
-                        key={currentCategory || 'all'}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        transition={{ duration: 0.4 }}
-                    >
-                        {posts.map(post => (
-                            <div key={post.id} className="mb-8 p-4 border rounded shadow">
+            <AnimatePresence mode="wait">
+                <motion.div
+                    key={currentCategory || 'all'}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.4 }}
+                >
+                    {posts.length > 0 ? (
+                        posts.map((post, index) => (
+                            <motion.div
+                                key={post.id}
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -10 }}
+                                transition={{
+                                    duration: 0.4,
+                                    delay: index * 0.05, // ➜ décalage progressif
+                                }}
+                                className="mb-8 p-4 border rounded shadow"
+                            >
                                 <h2 className="text-xl font-semibold">
                                     <Link href={`/blog/${post.slug}`} className="text-blue-600 hover:underline">
                                         {post.title}
@@ -52,20 +62,20 @@ export default function Blog() {
                                 </h2>
                                 <p className="text-gray-500 text-sm mb-2">Catégorie : {post.category?.name}</p>
                                 <p>{post.content.substring(0, 100)}...</p>
-                            </div>
-                        ))}
-                    </motion.div>
-                ) : (
-                    <motion.p
-                        key="empty"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="text-gray-500"
-                    >
-                        Aucun post trouvé dans cette catégorie.
-                    </motion.p>
-                )}
+                            </motion.div>
+                        ))
+                    ) : (
+                        <motion.p
+                            key="empty"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="text-gray-500"
+                        >
+                            Aucun post trouvé dans cette catégorie.
+                        </motion.p>
+                    )}
+                </motion.div>
             </AnimatePresence>
         </div>
     );
