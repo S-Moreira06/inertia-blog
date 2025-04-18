@@ -21,7 +21,7 @@ class BlogController extends Controller
             $postsQuery->where('category_id', $categoryId);
         }
 
-        $posts = $postsQuery->get();
+        $posts = $postsQuery->paginate(5);
 
         return Inertia::render('blog', [
             'posts' => $posts,

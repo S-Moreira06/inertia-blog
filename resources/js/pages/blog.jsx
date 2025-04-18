@@ -12,6 +12,12 @@ export default function Blog() {
             replace: true,
         });
     };
+    const handlePageChange = (page) => {
+        router.visit(`/blog?page=${page}${currentCategory ? `&category=${currentCategory}` : ''}`, {
+            preserveState: true,
+            replace: true,
+        });
+    };
 
     return (
         <div className="max-w-4xl mx-auto py-10">
@@ -55,8 +61,8 @@ export default function Blog() {
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.4 }}
                 >
-                    {posts.length > 0 ? (
-                        posts.map((post, index) => (
+                    {posts.data.length > 0 ? (
+                        posts.data.map((post, index) => (
                             <motion.div
                                 key={post.id}
                                 initial={{ opacity: 0, y: 10 }}
@@ -91,6 +97,27 @@ export default function Blog() {
                 </motion.div>
             </AnimatePresence>
             )}
+            <div className="mt-6 flex justify-center">
+                <button
+                    onClick={() => handlePageChange(posts.current_page - 1)}
+                    disabled={posts.current_page === 1}
+                    className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
+                >
+                    Précédent
+                </button>
+
+                <span className="mx-4">
+                    Page {posts.current_page} sur {posts.last_page}
+                </span>
+
+                <button
+                    onClick={() => handlePageChange(posts.current_page + 1)}
+                    disabled={posts.current_page === posts.last_page}
+                    className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
+                >
+                    Suivant
+                </button>
+            </div>
         </div>
     );
 }
