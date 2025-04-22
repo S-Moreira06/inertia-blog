@@ -19,8 +19,8 @@ export default function Header() {
                     <Link href="/blog" className="text-lg hover:text-blue-200">
                         Blog
                     </Link>
-                    <Link href="/about" className="text-lg hover:text-blue-200">
-                        À propos
+                    <Link href="/blog/create" className="text-lg hover:text-blue-200">
+                    Créer un article
                     </Link>
                     {/* Ajouter d'autres liens ici */}
                 </nav>

@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreatePostRequest;
 use Inertia\Inertia;
 use App\Models\Post;
 use App\Models\Category;
 use Illuminate\Http\Request;
+
+
 
 class BlogController extends Controller
 {
@@ -37,5 +40,21 @@ class BlogController extends Controller
             'post' => $post
         ]);
     }
+    public function create()
+    {
+        $categories = Category::all(['id', 'name']); 
+        
+        return Inertia::render('createPost', [
+            'categories' => $categories
+        ]);
+    }
+    public function store(CreatePostRequest $request)
+{
+    $post = Post::create($request->validated());
+
+    return redirect()->route('blog.show', $post->slug)
+                    ->with('success', 'Article créé avec succès !');
+}
+
 }
 
