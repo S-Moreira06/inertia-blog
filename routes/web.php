@@ -11,7 +11,10 @@ Route::get('/', function () {
 Route::prefix('blog')->name('blog.')->controller(BlogController::class)->group(function () {
     Route::get('/create', 'create')->name('create');
     Route::post('/create', 'store')->name('store');
-    
+
+    Route::get('/{post}/edit', 'edit')->name('edit');
+    Route::put('/{post}/edit', 'update')->name('update');
+
     Route::get('/', 'index')->name('index');
     Route::get('/{post:slug}', 'show')->name('show');
     });

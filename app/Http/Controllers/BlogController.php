@@ -49,12 +49,28 @@ class BlogController extends Controller
         ]);
     }
     public function store(CreatePostRequest $request)
-{
-    $post = Post::create($request->validated());
+    {
+        $post = Post::create($request->validated());
 
-    return redirect()->route('blog.show', $post->slug)
-                    ->with('success', 'Article créé avec succès !');
-}
-
+        return redirect()->route('blog.show', $post->slug)
+                        ->with('success', 'Article créé avec succès !');
+    }
+    public function edit(Post $post) 
+    {
+        return Inertia::render('editPost', [
+            'post' => $post,
+            'categories' => Category::select('id', 'name')->get(),
+        ]);
+    }
+    
+    public function update(CreatePostRequest $request, Post $post) {
+        $post->update($request->validated());
+        // return redirect()
+        //     ->route('blog.show', ['slug' =>$post->slug, 'post' => $post->id])
+        //     ->with('success', 'Article modifié avec succès !');
+        return redirect()
+            ->route('blog.show', $post->slug)
+            ->with('success', 'Article modifié avec succès !');
+    }
 }
 

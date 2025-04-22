@@ -29,7 +29,7 @@ class CreatePostRequest extends FormRequest
                 'required',
                 'string',
                 'regex:/^[a-z0-9\-]+$/',
-                Rule::unique('posts', 'slug'),
+                Rule::unique('posts', 'slug')->ignore($this->route('post')),
             ],
             'content' => 'required|string',
             'category_id' => 'required|exists:categories,id',
