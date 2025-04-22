@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class CreatePostRequest extends FormRequest
 {
@@ -23,10 +25,21 @@ class CreatePostRequest extends FormRequest
     {
         return [
             'title' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:posts,slug',
+            'slug' => [
+                'required',
+                'string',
+                'regex:/^[a-z0-9\-]+$/',
+                Rule::unique('posts', 'slug'),
+            ],
             'content' => 'required|string',
             'category_id' => 'required|exists:categories,id',
         ];
+    }
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'slug' => $this->input('slug') ?: Str::slug($this->input('title'))
+        ]);
     }
 
     public function messages(): array
